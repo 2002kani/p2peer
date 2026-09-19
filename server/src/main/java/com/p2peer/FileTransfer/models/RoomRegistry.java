@@ -2,7 +2,6 @@ package com.p2peer.FileTransfer.models;
 
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
