@@ -8,9 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class RoomRegistry {
-    // Room containing of IP Adress as key, SessionIds of peers as Value
+    // Room containing of IP Adress as key, SessionIds of peers as Value: {  }
     private final Map<String, Set<String>> rooms = new ConcurrentHashMap<>();
-
     // Peer contains the SessionId as key & name as value
     private final Map<String, Peer> peers = new ConcurrentHashMap<>();
 }

@@ -1,25 +1,26 @@
 package com.p2peer.FileTransfer.config;
 
+import com.p2peer.FileTransfer.signaling.SignalingHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
-        config.setApplicationDestinationPrefixes("/app");
+@EnableWebSocket
+public class WebSocketConfiguration implements WebSocketConfigurer {
+    private final SignalingHandler handler;
+    private final WebSocketInterceptor interceptor;
+
+    public WebSocketConfiguration(SignalingHandler handler,  WebSocketInterceptor interceptor) {
+        this.handler = handler;
+        this.interceptor = interceptor;
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // Vite-Dev-Server laeuft auf einem anderen Port, Spring erlaubt
-        // sonst nur Same-Origin-Handshakes.
-        registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*");
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler( handler, "/ws")
+                .addInterceptors(interceptor)
+                .setAllowedOriginPatterns("*");
     }
 }
