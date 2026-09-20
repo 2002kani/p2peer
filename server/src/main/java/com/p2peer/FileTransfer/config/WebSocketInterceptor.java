@@ -1,5 +1,6 @@
 package com.p2peer.FileTransfer.config;
 
+import com.p2peer.FileTransfer.models.DeviceKind;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -18,9 +19,9 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
             WebSocketHandler wsHandler,
             Map<String, Object> attributes
     ) throws Exception {
-        System.out.println("Attributes: " + attributes);
         attributes.put("ip", resolveIp(request));
-        attributes.put("kind", ""); // TODO: implement device kind extractor method (maybe a new class for that and static funtion)
+        attributes.put("kind", DeviceKind.fromUserAgent(request.getHeaders().getFirst("User-Agent")));
+        System.out.println("Attributes: " + attributes);
         return true;
     }
 
@@ -33,6 +34,8 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
     }
 
     private String resolveIp(ServerHttpRequest request){
+        System.out.println("User agent: " + request.getHeaders().getFirst("User-Agent"));
+
         String forwardedIp = request.getHeaders().getFirst("X-Forwarded-For");
 
         // If a reverse proxy is used - use the attribute given inside the header as public IP
