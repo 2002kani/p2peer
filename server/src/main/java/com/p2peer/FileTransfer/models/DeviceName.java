@@ -29,7 +29,7 @@ public class DeviceName {
     private DeviceName() {
     }
 
-    public static String forId(String id) {
+    public static String createNameForId(String id) {
         // Shifts bit to a positive hash only to prevent exception
         int hash = id.hashCode() & 0x7fffffff;
 

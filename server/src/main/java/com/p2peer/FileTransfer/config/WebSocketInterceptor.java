@@ -21,7 +21,6 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
     ) throws Exception {
         attributes.put("ip", resolveIp(request));
         attributes.put("kind", DeviceKind.fromUserAgent(request.getHeaders().getFirst("User-Agent")));
-        System.out.println("Attributes: " + attributes);
         return true;
     }
 
@@ -34,8 +33,6 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
     }
 
     private String resolveIp(ServerHttpRequest request){
-        System.out.println("User agent: " + request.getHeaders().getFirst("User-Agent"));
-
         String forwardedIp = request.getHeaders().getFirst("X-Forwarded-For");
 
         // If a reverse proxy is used - use the attribute given inside the header as public IP
