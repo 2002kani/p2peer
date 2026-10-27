@@ -9,14 +9,14 @@ import org.springframework.web.socket.WebSocketSession;
 public class Peer {
     private final String id;
     private final String name;
-    private final String Kind;
+    private final String kind;
     private final String roomId;
     private final WebSocketSession session;
 
     public Peer(String id, String name, String kind, String roomId, WebSocketSession session) {
         this.id = id;
         this.name = name;
-        this.Kind = kind;
+        this.kind = kind;
         this.roomId = roomId;
         this.session = session;
     }

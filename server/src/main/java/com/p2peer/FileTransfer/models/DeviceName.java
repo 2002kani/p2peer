@@ -1,5 +1,6 @@
 package com.p2peer.FileTransfer.models;
 
+// TODO: make it english
 /**
  * Erzeugt aus einer Session-ID einen stabilen, lesbaren Namen.
  *

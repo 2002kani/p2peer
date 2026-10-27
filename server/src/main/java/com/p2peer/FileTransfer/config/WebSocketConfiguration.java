@@ -2,8 +2,6 @@ package com.p2peer.FileTransfer.config;
 
 import com.p2peer.FileTransfer.signaling.SignalingHandler;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
