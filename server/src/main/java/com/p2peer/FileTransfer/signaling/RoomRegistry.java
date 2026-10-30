@@ -15,9 +15,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class RoomRegistry {
     private final String strategy;
-    // Room containing of IP Adress as key, SessionIds of peers as Value
+
+    /*
+    Rooms are representing groups of < two peers, who are in the same network.
+    Containing of ip adress as key and sessionIds of peers as value.
+     */
     private final Map<String, Set<String>> rooms = new ConcurrentHashMap<>();
-    // Peers containing the SessionId as key
+
+    /*
+    Peers representing the way of how to reach the peer
+    Containing of the SessionId as key and Peer entity as value.
+     */
     private final Map<String, Peer> peers = new ConcurrentHashMap<>();
 
     public RoomRegistry(@Value("${room.strategy}") String strategy) {
