@@ -1,0 +1,8 @@
+.footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.footer strong {
+  color: var(--text-h);
+}

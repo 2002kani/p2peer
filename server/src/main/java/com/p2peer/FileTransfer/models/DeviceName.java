@@ -1,17 +1,6 @@
 package com.p2peer.FileTransfer.models;
 
-// TODO: make it english
-/**
- * Erzeugt aus einer Session-ID einen stabilen, lesbaren Namen.
- *
- * "Chrome auf Windows" ist unbrauchbar, sobald zwei davon in der Liste
- * stehen. Ein Fantasiename ist eindeutig und leicht vorzulesen.
- *
- * 20 x 20 = 400 Kombinationen. Das Geburtstagsparadoxon schlaegt frueh
- * zu: bei 10 Geraeten im Raum liegt die Chance auf eine Dopplung schon
- * bei rund 11 Prozent. Deshalb haengt RoomRegistry bei Kollisionen im
- * selben Raum eine Ziffer an.
- */
+// TODO: translate it to englisch
 public class DeviceName {
     private static final String[] ADJECTIVES = {
             "Blauer", "Roter", "Grüner", "Stiller", "Schneller",

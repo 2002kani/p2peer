@@ -60,7 +60,6 @@ public class SignalingHandler extends TextWebSocketHandler {
         }
     }
 
-    /* relays offer / answer / ice candidates. The server does not need to understand "data" */
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         Peer sender = registry.get(session.getId());
@@ -89,9 +88,9 @@ public class SignalingHandler extends TextWebSocketHandler {
         JsonNode data = msg.path("data");
         if (!data.isObject()) return;
 
+        // Relay is the new message forwarded to the target
         ObjectNode relay = json.createObjectNode();
         relay.put("type", "signal");
-        // "from" is always set by the server, so a client can not pretend to be someone else
         relay.put("from", sender.getId());
         relay.set("data", data);
 
