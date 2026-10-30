@@ -14,17 +14,17 @@ package com.p2peer.FileTransfer.models;
  */
 public class DeviceName {
     private static final String[] ADJECTIVES = {
-            "Blauer", "Roter", "Gruener", "Stiller", "Schneller",
-            "Weiser", "Kleiner", "Wilder", "Goldener", "Kuehler",
+            "Blauer", "Roter", "Grüner", "Stiller", "Schneller",
+            "Weißer", "Kleiner", "Wilder", "Goldener", "Kühler",
             "Silberner", "Heller", "Dunkler", "Flinker", "Ruhiger",
             "Warmer", "Klarer", "Sanfter", "Mutiger", "Weiter"
     };
 
     private static final String[] NOUNS = {
-            "Tiger", "Falke", "Otter", "Dachs", "Kranich",
-            "Luchs", "Marder", "Reiher", "Wolf", "Igel",
-            "Panda", "Fuchs", "Rabe", "Biber", "Hirsch",
-            "Uhu", "Seehund", "Steinbock", "Waschbaer", "Schwan"
+            "Benz", "Bmw", "Porsche", "Volkswagen", "Jaguar",
+            "Pagani", "Mustang", "lamborghini", "Alfa Romeo", "Ferrari",
+            "Ford", "Opel", "Audi", "Citroen", "Tesla",
+            "Bentley", "Renault", "Fiat", "Bugatti", "Seat"
     };
 
     private DeviceName() {
