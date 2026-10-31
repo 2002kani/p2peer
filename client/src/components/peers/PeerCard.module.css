@@ -1,0 +1,52 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: 9.5rem;
+  padding: 1.25rem 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    transform 0.15s;
+}
+
+.card:hover,
+.card:focus-visible {
+  border-color: var(--accent);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.dragOver {
+  border-color: var(--accent);
+  border-style: dashed;
+}
+
+.icon {
+  font-size: 2.75rem;
+  line-height: 1;
+}
+
+.name {
+  color: var(--text-h);
+  font-weight: 500;
+}
+
+.state {
+  min-height: 1.2em;
+  font-size: 0.8rem;
+}
+
+.state[data-state='connected'] {
+  color: var(--success);
+}
+
+.state[data-state='failed'] {
+  color: var(--danger);
+}

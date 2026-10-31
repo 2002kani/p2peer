@@ -1,8 +1,13 @@
 .footer {
-  padding: 1.5rem;
+  padding: 1.25rem 1rem;
   border-top: 1px solid var(--border);
+  text-align: center;
 }
 
 .footer strong {
   color: var(--text-h);
+}
+
+.connecting {
+  color: var(--danger);
 }
