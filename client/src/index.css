@@ -1,33 +1,30 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --surface: #f7f6f9;
-  --border: #e5e4e7;
-  --accent: #7c3aed;
-  --success: #15803d;
-  --danger: #b91c1c;
+  --text: #6b7890;
+  --text-h: #0f1b2d;
+  --bg: #f4f7fb;
+  --surface: #fff;
+  --border: #e6ebf3;
+  --accent: #4a63e7;
+  --accent-soft: #e3e8fb;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #dc2626;
+  --shadow: 0 8px 24px rgb(30 50 90 / 0.08), 0 1px 3px rgb(30 50 90 / 0.06);
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --map-land: #f4f7fb;
+  --map-water: #e4ebf7;
+  --map-park: #e9f1ed;
+  --map-road: #fff;
+  --map-road-edge: #ebeff5;
+  --ring: rgb(15 27 45 / 0.07);
+
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   font: 16px/1.45 var(--sans);
-  color-scheme: light dark;
+  color-scheme: light;
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --surface: #1f2028;
-    --border: #2e303a;
-    --accent: #a78bfa;
-    --success: #4ade80;
-    --danger: #f87171;
-  }
 }
 
 *,
@@ -36,6 +33,7 @@
   box-sizing: border-box;
 }
 
+/* no background here: it would cover the fixed map behind #root */
 body {
   margin: 0;
 }
@@ -49,6 +47,6 @@ body {
 h1,
 h2 {
   margin: 0;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-h);
 }

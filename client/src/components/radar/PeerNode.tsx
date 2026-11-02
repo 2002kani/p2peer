@@ -1,8 +1,9 @@
 import { useRef, useState, type DragEvent } from 'react'
 import type { PeerInfo } from '../../signaling/types'
 import type { PeerConnectionState } from '../../webrtc/PeerConnection'
+import { DEVICE_LABEL } from '../../lib/deviceLabel'
 import { DeviceIcon } from '../common/DeviceIcon'
-import styles from './PeerCard.module.css'
+import styles from './PeerNode.module.css'
 
 const STATE_LABEL: Record<PeerConnectionState, string> = {
   connecting: 'Verbinde …',
@@ -11,13 +12,15 @@ const STATE_LABEL: Record<PeerConnectionState, string> = {
   closed: '',
 }
 
-interface PeerCardProps {
+interface PeerNodeProps {
   peer: PeerInfo
   state?: PeerConnectionState
+  // 0..1 while a transfer with this peer is running
+  progress?: number
   onSendFiles: (peerId: string, files: File[]) => void
 }
 
-export function PeerCard({ peer, state, onSendFiles }: PeerCardProps) {
+export function PeerNode({ peer, state, progress, onSendFiles }: PeerNodeProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragOver, setDragOver] = useState(false)
 
@@ -36,25 +39,39 @@ export function PeerCard({ peer, state, onSendFiles }: PeerCardProps) {
     send(event.dataTransfer.files)
   }
 
+  const stateLabel = state ? STATE_LABEL[state] : ''
+
   return (
-    <li>
+    <div className={styles.node}>
       <button
         type="button"
-        className={dragOver ? `${styles.card} ${styles.dragOver}` : styles.card}
+        className={dragOver ? `${styles.circle} ${styles.dragOver}` : styles.circle}
         onClick={() => inputRef.current?.click()}
         onDragOver={onDragOver}
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
-        title={`Dateien an ${peer.name} senden`}
+        title={stateLabel ? `${stateLabel} · Dateien an ${peer.name} senden` : `Dateien an ${peer.name} senden`}
       >
-        <span className={styles.icon}>
-          <DeviceIcon kind={peer.kind} />
-        </span>
-        <span className={styles.name}>{peer.name}</span>
-        <span className={styles.state} data-state={state}>
-          {state ? STATE_LABEL[state] : ''}
-        </span>
+        <DeviceIcon kind={peer.kind} />
+        <span className={styles.dot} data-state={state} />
+
+        {progress !== undefined && (
+          <svg className={styles.progress} viewBox="0 0 100 100" aria-hidden>
+            <circle cx="50" cy="50" r="48" pathLength={100} className={styles.track} />
+            <circle
+              cx="50"
+              cy="50"
+              r="48"
+              pathLength={100}
+              className={styles.bar}
+              strokeDasharray={`${progress * 100} 100`}
+            />
+          </svg>
+        )}
       </button>
+
+      <span className={styles.name}>{peer.name}</span>
+      <span className={styles.kind}>{DEVICE_LABEL[peer.kind]}</span>
 
       <input
         ref={inputRef}
@@ -67,6 +84,6 @@ export function PeerCard({ peer, state, onSendFiles }: PeerCardProps) {
           event.target.value = ''
         }}
       />
-    </li>
+    </div>
   )
 }

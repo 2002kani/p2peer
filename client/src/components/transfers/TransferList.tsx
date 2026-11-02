@@ -11,8 +11,7 @@ export function TransferList({ transfers, names }: TransferListProps) {
   if (transfers.length === 0) return null
 
   return (
-    <section className={styles.section}>
-      <h2 className={styles.title}>Übertragungen</h2>
+    <section className={styles.toasts} aria-label="Übertragungen" aria-live="polite">
       <ul className={styles.list}>
         {transfers.map((transfer) => (
           <TransferItem
