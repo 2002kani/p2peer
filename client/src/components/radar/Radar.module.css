@@ -1,0 +1,125 @@
+.radar {
+  --size: min(740px, calc(100vw - 32px), calc(100svh - 200px));
+  --core: clamp(84px, calc(var(--size) * 0.17), 128px);
+  --orbit: calc(var(--size) * 0.42);
+
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+}
+
+.circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.ringOuter {
+  width: 80%;
+  border: 1px solid var(--ring);
+}
+
+.ringInner {
+  width: 51%;
+  border: 1px solid var(--ring);
+  background: rgb(255 255 255 / 0.25);
+}
+
+.glow {
+  width: max(30%, calc(var(--core) * 1.7));
+  border: 1px solid rgb(74 99 231 / 0.06);
+  background: radial-gradient(circle, rgb(74 99 231 / 0.08), rgb(74 99 231 / 0.04) 70%);
+}
+
+/* subtle signal waves, fading out before the inner ring */
+.wave {
+  width: var(--core);
+  border: 1px solid rgb(74 99 231 / 0.2);
+  background: rgb(74 99 231 / 0.03);
+  opacity: 0;
+  animation: wave 4.5s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+}
+
+@keyframes wave {
+  0% {
+    opacity: 0.8;
+    scale: 1;
+  }
+
+  100% {
+    opacity: 0;
+    scale: 2.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave {
+    display: none;
+  }
+}
+
+.self {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+.core {
+  display: grid;
+  place-items: center;
+  width: var(--core);
+  height: var(--core);
+  border-radius: 50%;
+  background: var(--accent-soft);
+  box-shadow:
+    0 10px 30px rgb(74 99 231 / 0.15),
+    inset 0 0 0 1px rgb(74 99 231 / 0.08);
+  color: var(--accent);
+}
+
+.selfLabel {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  translate: -50% 0;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.selfLabel strong {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.peers {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* zero sized anchor on the orbit; the peer circle is centred on it */
+.slot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--angle)) translateX(calc(var(--orbit) * var(--distance))) rotate(calc(var(--angle) * -1));
+  transition: transform 0.5s ease;
+  animation: appear 0.35s ease-out;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}

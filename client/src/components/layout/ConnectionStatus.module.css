@@ -1,0 +1,18 @@
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--warning);
+}
+
+.status[data-state='connected'] .dot {
+  background: var(--success);
+}

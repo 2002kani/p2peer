@@ -1,0 +1,109 @@
+/* --node is used by the anchor offset, so the circle (not the label) sits on the orbit */
+.node {
+  --node: 64px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 9rem;
+  translate: -50% calc(var(--node) / -2);
+}
+
+@media (max-width: 480px) {
+  .node {
+    --node: 52px;
+
+    width: 6.5rem;
+  }
+}
+
+.circle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--node);
+  height: var(--node);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--text-h);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.circle:hover,
+.circle:focus-visible {
+  border-color: var(--accent);
+  outline: none;
+  transform: translateY(-2px);
+  box-shadow:
+    var(--shadow),
+    0 0 0 4px var(--accent-soft);
+}
+
+.dragOver {
+  border: 2px dashed var(--accent);
+  transform: scale(1.08);
+  box-shadow:
+    var(--shadow),
+    0 0 0 6px var(--accent-soft);
+}
+
+.dot {
+  position: absolute;
+  top: 1px;
+  right: 3px;
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.dot[data-state='connecting'] {
+  background: var(--warning);
+}
+
+.dot[data-state='failed'] {
+  background: var(--danger);
+}
+
+.progress {
+  position: absolute;
+  inset: -6px;
+  rotate: -90deg;
+  fill: none;
+  stroke-width: 3;
+  pointer-events: none;
+}
+
+.track {
+  stroke: var(--accent-soft);
+}
+
+.bar {
+  stroke: var(--accent);
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.2s linear;
+}
+
+.name {
+  margin-top: 0.6rem;
+  overflow: hidden;
+  max-width: 100%;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-h);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kind {
+  font-size: 0.75rem;
+}

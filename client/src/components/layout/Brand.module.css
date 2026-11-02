@@ -1,0 +1,141 @@
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.title {
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.info {
+  display: grid;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  color: var(--text);
+  font:
+    600 0.7rem/1 Georgia,
+    serif;
+  font-style: italic;
+  transition: color 0.15s;
+}
+
+.brand:hover .info,
+.brand:focus-visible .info {
+  color: var(--accent);
+}
+
+.brand:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 4px;
+  border-radius: 0.5rem;
+}
+
+.dialog {
+  width: min(28rem, calc(100vw - 32px));
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  background: var(--surface);
+  box-shadow: 0 24px 60px rgb(30 50 90 / 0.18);
+  color: var(--text);
+}
+
+.dialog::backdrop {
+  background: rgb(15 27 45 / 0.25);
+  backdrop-filter: blur(3px);
+}
+
+.dialog[open] {
+  animation: pop 0.2s ease-out;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.content {
+  position: relative;
+  padding: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.content p {
+  margin: 0.5rem 0 1rem;
+}
+
+.close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--text);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus-visible {
+  outline: none;
+  background: var(--border);
+  color: var(--text-h);
+}
+
+.heading {
+  font-size: 1.15rem;
+}
+
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.points li {
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--accent-soft);
+}
+
+.points strong {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.repo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  background: var(--text-h);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.repo:hover {
+  background: var(--accent);
+}
