@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import styles from "./App.module.css";
+import { Brand } from "./components/layout/Brand";
 import { ConnectionStatus } from "./components/layout/ConnectionStatus";
 import { MapBackground } from "./components/layout/MapBackground";
 import { Radar } from "./components/radar/Radar";
@@ -18,7 +19,7 @@ function App() {
       <MapBackground />
 
       <header className={styles.header}>
-        <h1 className={styles.title}>p2peer</h1>
+        <Brand />
         <ConnectionStatus connection={connection} />
       </header>
 
