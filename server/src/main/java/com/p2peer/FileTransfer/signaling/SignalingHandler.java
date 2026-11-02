@@ -51,6 +51,9 @@ public class SignalingHandler extends TextWebSocketHandler {
 
         send(peer, welcome);
 
+        // a failed send closes the session in this same thread -> peer-left is already out, a peer-joined now would stay forever
+        if (registry.get(peer.getId()) == null) return;
+
         ObjectNode joined = json.createObjectNode();
         joined.put("type", "peer-joined");
         joined.set("peer", describe(peer));
@@ -58,6 +61,9 @@ public class SignalingHandler extends TextWebSocketHandler {
         for (Peer other : others) {
             send(other, joined);
         }
+
+        // another thread can close the session during the loop -> its peer-left may have overtaken our peer-joined
+        if (registry.get(peer.getId()) == null) notifyLeft(peer);
     }
 
     @Override
@@ -102,6 +108,17 @@ public class SignalingHandler extends TextWebSocketHandler {
         Peer peer = registry.leave(session.getId());
         if(peer == null) return;
 
+        notifyLeft(peer);
+    }
+
+    /* in a hard connection error afterConnectionClosed wont get called properly. This method cleans it up */
+    @Override
+    public void handleTransportError(WebSocketSession session, Throwable error) {
+        log.warn("transport error in {}: {}", session.getId(), error.getMessage());
+        afterConnectionClosed(session, CloseStatus.SERVER_ERROR);
+    }
+
+    private void notifyLeft(Peer peer) {
         ObjectNode left = json.createObjectNode();
         left.put("type", "peer-left");
         left.put("id", peer.getId());
@@ -110,13 +127,6 @@ public class SignalingHandler extends TextWebSocketHandler {
         for (Peer other : registry.othersInRoom(peer)) {
             send(other, left);
         }
-    }
-
-    /* in a hard connection error afterConnectionClosed wont get called properly. This method cleans it up */
-    @Override
-    public void handleTransportError(WebSocketSession session, Throwable error) {
-        log.warn("transport error in {}: {}", session.getId(), error.getMessage());
-        afterConnectionClosed(session, CloseStatus.SERVER_ERROR);
     }
 
     private void send(Peer peer, ObjectNode payload) {
