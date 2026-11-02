@@ -6,9 +6,9 @@ import { DeviceIcon } from '../common/DeviceIcon'
 import styles from './PeerNode.module.css'
 
 const STATE_LABEL: Record<PeerConnectionState, string> = {
-  connecting: 'Verbinde …',
-  connected: 'Verbunden',
-  failed: 'Verbindung fehlgeschlagen',
+  connecting: 'Connecting …',
+  connected: 'Connected',
+  failed: 'Connection failed',
   closed: '',
 }
 
@@ -50,7 +50,7 @@ export function PeerNode({ peer, state, progress, onSendFiles }: PeerNodeProps) 
         onDragOver={onDragOver}
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
-        title={stateLabel ? `${stateLabel} · Dateien an ${peer.name} senden` : `Dateien an ${peer.name} senden`}
+        title={stateLabel ? `${stateLabel} · Send files to ${peer.name}` : `Send files to ${peer.name}`}
       >
         <DeviceIcon kind={peer.kind} />
         <span className={styles.dot} data-state={state} />

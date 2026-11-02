@@ -3,10 +3,10 @@ import type { Transfer, TransferStatus } from "../../transfer/types";
 import styles from "./TransferItem.module.css";
 
 const STATUS_LABEL: Record<TransferStatus, string> = {
-  waiting: "Wartet …",
-  transferring: "Überträgt …",
-  done: "Fertig",
-  failed: "Fehlgeschlagen",
+  waiting: "Waiting …",
+  transferring: "Transferring …",
+  done: "Done",
+  failed: "Failed",
 };
 
 interface TransferItemProps {
@@ -18,7 +18,7 @@ export function TransferItem({ transfer, peerName }: TransferItemProps) {
   const { direction, name, size, transferred, status, url, error } = transfer;
   const percent = size === 0 ? 100 : Math.floor((transferred / size) * 100);
   const counterpart =
-    direction === "send" ? `an ${peerName}` : `von ${peerName}`;
+    direction === "send" ? `to ${peerName}` : `from ${peerName}`;
   const statusText =
     status === "failed" && error
       ? `${STATUS_LABEL.failed}: ${error}`
@@ -30,7 +30,7 @@ export function TransferItem({ transfer, peerName }: TransferItemProps) {
         type="button"
         className={styles.cancel}
         onClick={() => ""}
-        aria-label="Abbrechen"
+        aria-label="Cancel"
       >
         ✕
       </button>
@@ -60,7 +60,7 @@ export function TransferItem({ transfer, peerName }: TransferItemProps) {
 
       {direction === "receive" && status === "done" && url && (
         <a className={styles.download} href={url} download={name}>
-          Speichern
+          Save
         </a>
       )}
     </li>

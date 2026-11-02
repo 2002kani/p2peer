@@ -41,9 +41,9 @@ export function Radar({
           <DeviceIcon kind={self?.kind ?? "Laptop"} size={34} />
         </span>
         <span className={styles.selfLabel}>
-          <strong>Du</strong>
+          <strong>You</strong>
           <span>
-            {self ? `${self.name} · ${DEVICE_LABEL[self.kind]}` : "Verbinde …"}
+            {self ? `${self.name} · ${DEVICE_LABEL[self.kind]}` : "Connecting …"}
           </span>
         </span>
       </div>

@@ -35,28 +35,28 @@ export function Brand() {
             type="button"
             className={styles.close}
             onClick={close}
-            aria-label="Schließen"
+            aria-label="Close"
           >
             ✕
           </button>
 
           <h2 id="info-title" className={styles.heading}>
-            Über p2peer
+            About p2peer
           </h2>
           <p>
-            p2peer schickt Dateien direkt von Gerät zu Gerät, ohne Umweg über
-            eine Cloud.
+            p2peer sends files straight from device to device, without a
+            detour through the cloud.
           </p>
 
           <ul className={styles.points}>
             <li>
-              <strong>Direkt übertragen.</strong> Dateien gehen per WebRTC
-              unmittelbar zwischen den Browsern hin und her, in deinem Netzwerk
-              ganz lokal.
+              <strong>Direct transfer.</strong> Files travel via WebRTC
+              directly between browsers, entirely locally within your
+              network.
             </li>
             <li>
-              <strong>Verschlüsselt.</strong> Jede Verbindung ist Ende-zu-Ende
-              verschlüsselt (DTLS), niemand dazwischen kann mitlesen.
+              <strong>Encrypted.</strong> Every connection is end-to-end
+              encrypted (DTLS), so nobody in between can read along.
             </li>
           </ul>
           <a

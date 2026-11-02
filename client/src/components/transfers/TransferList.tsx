@@ -13,7 +13,7 @@ export function TransferList({ transfers, names }: TransferListProps) {
   return (
     <section
       className={styles.toasts}
-      aria-label="Übertragungen"
+      aria-label="Transfers"
       aria-live="polite"
     >
       <ul className={styles.list}>
@@ -21,7 +21,7 @@ export function TransferList({ transfers, names }: TransferListProps) {
           <TransferItem
             key={`${transfer.direction}-${transfer.id}`}
             transfer={transfer}
-            peerName={names[transfer.peerId] ?? "Unbekanntes Gerät"}
+            peerName={names[transfer.peerId] ?? "Unknown device"}
           />
         ))}
       </ul>

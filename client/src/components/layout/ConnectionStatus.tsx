@@ -5,7 +5,7 @@ export function ConnectionStatus({ connection }: { connection: ConnectionState }
   return (
     <span className={styles.status} data-state={connection}>
       <span className={styles.dot} />
-      {connection === 'connected' ? 'Online' : 'Verbinde …'}
+      {connection === 'connected' ? 'Online' : 'Connecting …'}
     </span>
   )
 }

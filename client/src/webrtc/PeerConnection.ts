@@ -86,20 +86,20 @@ export class PeerConnection {
   waitUntilOpen(): Promise<void> {
     if (this.#state === "connected") return Promise.resolve();
     if (this.#state !== "connecting")
-      return Promise.reject(new Error("Verbindung getrennt"));
+      return Promise.reject(new Error("Connection lost"));
 
     return new Promise((resolve, reject) => {
       const timer = window.setTimeout(() => {
         off();
         this.#setState("failed");
-        reject(new Error("Zeitüberschreitung beim Verbinden"));
+        reject(new Error("Connection timed out"));
       }, OPEN_TIMEOUT_MS);
 
       const off = this.events.on("state", (state) => {
         window.clearTimeout(timer);
         off();
         if (state === "connected") resolve();
-        else reject(new Error("Verbindung fehlgeschlagen"));
+        else reject(new Error("Connection failed"));
       });
     });
   }

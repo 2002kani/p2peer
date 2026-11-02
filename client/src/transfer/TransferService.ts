@@ -170,7 +170,7 @@ export class TransferService {
     mime: string,
   ): void {
     // a previous file that never finished is lost
-    this.#failIncoming(peerId, "Übertragung abgebrochen");
+    this.#failIncoming(peerId, "Transfer cancelled");
 
     const transfer: Transfer = {
       id: transferId,
@@ -207,7 +207,7 @@ export class TransferService {
     if (transfer.transferred !== transfer.size) {
       this.#update(transfer, {
         status: "failed",
-        error: "Datei unvollständig",
+        error: "File incomplete",
       });
       return;
     }
@@ -252,10 +252,10 @@ export class TransferService {
   }
 
   #abortPeer(peerId: string): void {
-    this.#aborts.get(peerId)?.abort(new Error("Verbindung getrennt"));
+    this.#aborts.get(peerId)?.abort(new Error("Connection lost"));
     this.#aborts.delete(peerId);
     this.#sendQueues.delete(peerId);
-    this.#failIncoming(peerId, "Verbindung getrennt");
+    this.#failIncoming(peerId, "Connection lost");
   }
 
   #failIncoming(peerId: string, error: string): void {
@@ -298,5 +298,5 @@ function waitForDrain(
 }
 
 function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : "Unbekannter Fehler";
+  return error instanceof Error ? error.message : "Unknown error";
 }

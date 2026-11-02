@@ -47,8 +47,8 @@ function App() {
           <path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.5 16a5 5 0 0 1 7 0M12 19.5h.01" />
         </svg>
         {peers.length === 0
-          ? "Geräte werden automatisch im Netzwerk gefunden."
-          : "Klicke auf ein Gerät oder ziehe Dateien darauf."}
+          ? "Devices on your network are found automatically."
+          : "Click a device or drop files on it."}
       </p>
 
       <TransferList transfers={transfers} names={names} />
