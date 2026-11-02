@@ -1,26 +1,30 @@
-import type { Transfer } from '../../transfer/types'
-import { TransferItem } from './TransferItem'
-import styles from './TransferList.module.css'
+import type { Transfer } from "../../transfer/types";
+import { TransferItem } from "./TransferItem";
+import styles from "./TransferList.module.css";
 
 interface TransferListProps {
-  transfers: Transfer[]
-  names: Record<string, string>
+  transfers: Transfer[];
+  names: Record<string, string>;
 }
 
 export function TransferList({ transfers, names }: TransferListProps) {
-  if (transfers.length === 0) return null
+  if (transfers.length === 0) return null;
 
   return (
-    <section className={styles.toasts} aria-label="Übertragungen" aria-live="polite">
+    <section
+      className={styles.toasts}
+      aria-label="Übertragungen"
+      aria-live="polite"
+    >
       <ul className={styles.list}>
         {transfers.map((transfer) => (
           <TransferItem
             key={`${transfer.direction}-${transfer.id}`}
             transfer={transfer}
-            peerName={names[transfer.peerId] ?? 'Unbekanntes Gerät'}
+            peerName={names[transfer.peerId] ?? "Unbekanntes Gerät"}
           />
         ))}
       </ul>
     </section>
-  )
+  );
 }
