@@ -44,15 +44,14 @@ export function Brand() {
             About p2peer
           </h2>
           <p>
-            p2peer sends files straight from device to device, without a
-            detour through the cloud.
+            p2peer sends files straight from device to device, without a detour
+            through the cloud.
           </p>
 
           <ul className={styles.points}>
             <li>
-              <strong>Direct transfer.</strong> Files travel via WebRTC
-              directly between browsers, entirely locally within your
-              network.
+              <strong>Direct transfer.</strong> Files travel via WebRTC directly
+              between browsers, entirely locally within your network.
             </li>
             <li>
               <strong>Encrypted.</strong> Every connection is end-to-end
