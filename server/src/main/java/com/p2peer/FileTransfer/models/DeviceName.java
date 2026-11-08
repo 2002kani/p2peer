@@ -1,16 +1,15 @@
 package com.p2peer.FileTransfer.models;
 
-// TODO: translate it to englisch
 public class DeviceName {
     private static final String[] ADJECTIVES = {
-            "Blauer", "Roter", "Grüner", "Stiller", "Schneller",
-            "Weißer", "Kleiner", "Wilder", "Goldener", "Kühler",
-            "Silberner", "Heller", "Dunkler", "Flinker", "Ruhiger",
-            "Warmer", "Klarer", "Sanfter", "Mutiger", "Weiter"
+            "Blue", "Red", "Green", "Quiet", "Fast",
+            "White", "Little", "Wild", "Golden", "Cold",
+            "Silver", "Bright", "Dark", "Quick", "Soft",
+            "Warm", "Clear", "Brave", "Pretty", "Big"
     };
 
     private static final String[] NOUNS = {
-            "Benz", "Bmw", "Porsche", "Volkswagen", "Jaguar",
+            "Mercedes", "Bmw", "Porsche", "Volkswagen", "Jaguar",
             "Pagani", "Mustang", "lamborghini", "Alfa Romeo", "Ferrari",
             "Ford", "Opel", "Audi", "Citroen", "Tesla",
             "Bentley", "Renault", "Fiat", "Bugatti", "Seat"
