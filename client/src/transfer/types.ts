@@ -1,6 +1,12 @@
 export type TransferDirection = "send" | "receive";
 
-export type TransferStatus = "waiting" | "transferring" | "done" | "failed";
+export type TransferStatus =
+  | "waiting"
+  | "offered"
+  | "transferring"
+  | "done"
+  | "declined"
+  | "failed";
 
 export interface Transfer {
   id: string;
@@ -10,6 +16,5 @@ export interface Transfer {
   size: number;
   transferred: number;
   status: TransferStatus;
-  url?: string;
   error?: string;
 }

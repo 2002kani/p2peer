@@ -10,8 +10,18 @@ import { useFileShare } from "./hooks/useFileShare";
 import { progressByPeer } from "./transfer/progressByPeer";
 
 function App() {
-  const { connection, self, peers, names, peerStates, transfers, sendFiles } =
-    useFileShare(SIGNALING_URL);
+  const {
+    connection,
+    self,
+    peers,
+    names,
+    peerStates,
+    transfers,
+    sendFiles,
+    acceptTransfer,
+    declineTransfer,
+    dismissTransfer,
+  } = useFileShare(SIGNALING_URL);
   const progress = useMemo(() => progressByPeer(transfers), [transfers]);
 
   return (
@@ -51,7 +61,13 @@ function App() {
           : "Click a device or drop files on it."}
       </p>
 
-      <TransferList transfers={transfers} names={names} />
+      <TransferList
+        transfers={transfers}
+        names={names}
+        onAccept={acceptTransfer}
+        onDecline={declineTransfer}
+        onDismiss={dismissTransfer}
+      />
     </>
   );
 }

@@ -60,6 +60,23 @@
   justify-content: space-between;
   gap: 0.75rem;
   font-size: 0.85rem;
+  /* each row stays one line -> long names are cut with … instead of wrapping */
+  white-space: nowrap;
+}
+
+.counterpart,
+.status {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.counterpart {
+  min-width: 0;
+}
+
+.status {
+  flex-shrink: 0;
+  max-width: 60%;
 }
 
 .name {
@@ -78,7 +95,8 @@
   color: var(--success);
 }
 
-.status[data-status="failed"] {
+.status[data-status="failed"],
+.status[data-status="declined"] {
   color: var(--danger);
 }
 
@@ -89,12 +107,15 @@
   accent-color: var(--accent);
 }
 
-.download {
+.action {
   flex-shrink: 0;
   padding: 0.4rem 0.8rem;
+  border: none;
   border-radius: 0.5rem;
   background: var(--accent);
   color: #fff;
   font-size: 0.85rem;
+  font-family: inherit;
   text-decoration: none;
+  cursor: pointer;
 }

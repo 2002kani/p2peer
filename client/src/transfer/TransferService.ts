@@ -1,7 +1,8 @@
 import { createId } from "../lib/createId";
 import { Emitter } from "../lib/Emitter";
+import { saveFile } from "../lib/saveFile";
 import type { ConnectionManager } from "../webrtc/ConnectionManager";
-import { CHUNK_SIZE, decode, encode } from "./protocol";
+import { CHUNK_SIZE, decode, encode, type ControlMessage } from "./protocol";
 import type { Transfer } from "./types";
 
 const BUFFER_HIGH = 1024 * 1024;
@@ -31,8 +32,8 @@ export class TransferService {
   readonly #sendQueues = new Map<string, Promise<void>>();
   readonly #aborts = new Map<string, AbortController>();
   readonly #incoming = new Map<string, IncomingFile>();
-  readonly #acks = new Map<string, () => void>();
-  readonly #objectUrls: string[] = [];
+  readonly #answers = new Map<string, (accepted: boolean) => void>();
+  readonly #acks = new Map<string, (value: void) => void>();
 
   constructor(connections: ConnectionManager) {
     this.#connections = connections;
@@ -69,12 +70,32 @@ export class TransferService {
     }
   }
 
+  accept(transferId: string): void {
+    const incoming = this.#findOffer(transferId);
+    if (!incoming) return;
+    this.#update(incoming.transfer, { status: "transferring" });
+    this.#sendControl(incoming.transfer.peerId, {
+      type: "file-accept",
+      transferId,
+    });
+  }
+
+  decline(transferId: string): void {
+    const incoming = this.#findOffer(transferId);
+    if (!incoming) return;
+    this.#incoming.delete(incoming.transfer.peerId);
+    this.#update(incoming.transfer, { status: "declined" });
+    this.#sendControl(incoming.transfer.peerId, {
+      type: "file-decline",
+      transferId,
+    });
+  }
+
   dispose(): void {
     this.#unsubscribe.forEach((unsubscribe) => unsubscribe());
     for (const peerId of [...this.#aborts.keys(), ...this.#incoming.keys()]) {
       this.#abortPeer(peerId);
     }
-    this.#objectUrls.forEach((url) => URL.revokeObjectURL(url));
   }
 
   async #sendFile(
@@ -90,19 +111,29 @@ export class TransferService {
 
       const channel = connection.channel;
       channel.bufferedAmountLowThreshold = BUFFER_LOW;
-      const confirmed = this.#waitForAck(transfer.id, signal);
-      confirmed.catch(() => {});
 
-      this.#update(transfer, { status: "transferring" });
+      // the queue to this peer stays blocked until the receiver decides
+      const answer = this.#waitFor(this.#answers, transfer.id, signal);
+      this.#update(transfer, { status: "offered" });
       channel.send(
         encode({
-          type: "file-start",
+          type: "file-offer",
           transferId: transfer.id,
           name: file.name,
           size: file.size,
           mime: file.type,
         }),
       );
+      if (!(await answer)) {
+        this.#update(transfer, { status: "declined" });
+        return;
+      }
+      signal.throwIfAborted();
+
+      const confirmed = this.#waitFor(this.#acks, transfer.id, signal);
+      confirmed.catch(() => {});
+
+      this.#update(transfer, { status: "transferring" });
 
       let offset = 0;
       let lastProgress = 0;
@@ -129,6 +160,7 @@ export class TransferService {
       await confirmed;
       this.#update(transfer, { status: "done" });
     } catch (error) {
+      this.#answers.delete(transfer.id);
       this.#acks.delete(transfer.id);
       this.#update(transfer, { status: "failed", error: errorMessage(error) });
     }
@@ -144,8 +176,8 @@ export class TransferService {
     if (!message) return;
 
     switch (message.type) {
-      case "file-start":
-        this.#onFileStart(
+      case "file-offer":
+        this.#onFileOffer(
           peerId,
           message.transferId,
           message.name,
@@ -156,13 +188,19 @@ export class TransferService {
       case "file-end":
         this.#onFileEnd(peerId, message.transferId);
         break;
+      case "file-accept":
+        this.#answers.get(message.transferId)?.(true);
+        break;
+      case "file-decline":
+        this.#answers.get(message.transferId)?.(false);
+        break;
       case "file-received":
         this.#acks.get(message.transferId)?.();
         break;
     }
   }
 
-  #onFileStart(
+  #onFileOffer(
     peerId: string,
     transferId: string,
     name: string,
@@ -179,7 +217,7 @@ export class TransferService {
       name,
       size,
       transferred: 0,
-      status: "transferring",
+      status: "offered",
     };
     this.#incoming.set(peerId, { transfer, mime, chunks: [], lastProgress: 0 });
     this.#emit(transfer);
@@ -187,7 +225,8 @@ export class TransferService {
 
   #onChunk(peerId: string, chunk: ArrayBuffer): void {
     const incoming = this.#incoming.get(peerId);
-    if (!incoming) return;
+    // chunks before our file-accept were never asked for
+    if (incoming?.transfer.status !== "transferring") return;
 
     incoming.chunks.push(chunk);
     incoming.transfer.transferred += chunk.byteLength;
@@ -212,31 +251,37 @@ export class TransferService {
       return;
     }
 
-    const url = URL.createObjectURL(
+    saveFile(
       new Blob(chunks, { type: mime || "application/octet-stream" }),
+      transfer.name,
     );
-    this.#objectUrls.push(url);
-    this.#update(transfer, { status: "done", url });
+    this.#update(transfer, { status: "done" });
+    this.#sendControl(peerId, { type: "file-received", transferId });
+  }
 
+  #sendControl(peerId: string, message: ControlMessage): void {
     try {
-      this.#connections
-        .get(peerId)
-        ?.channel.send(encode({ type: "file-received", transferId }));
+      this.#connections.get(peerId)?.channel.send(encode(message));
     } catch (error) {
-      console.warn("could not confirm file", error);
+      console.warn(`could not send ${message.type}`, error);
     }
   }
 
-  #waitForAck(transferId: string, signal: AbortSignal): Promise<void> {
+  /** Resolves once the peer answers this transfer with a message routed into `pending`. */
+  #waitFor<T>(
+    pending: Map<string, (value: T) => void>,
+    transferId: string,
+    signal: AbortSignal,
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
       const onAbort = () => {
-        this.#acks.delete(transferId);
+        pending.delete(transferId);
         reject(signal.reason);
       };
-      this.#acks.set(transferId, () => {
-        this.#acks.delete(transferId);
+      pending.set(transferId, (value) => {
+        pending.delete(transferId);
         signal.removeEventListener("abort", onAbort);
-        resolve();
+        resolve(value);
       });
       signal.addEventListener("abort", onAbort, { once: true });
     });
@@ -256,6 +301,17 @@ export class TransferService {
     this.#aborts.delete(peerId);
     this.#sendQueues.delete(peerId);
     this.#failIncoming(peerId, "Connection lost");
+  }
+
+  #findOffer(transferId: string): IncomingFile | undefined {
+    for (const incoming of this.#incoming.values()) {
+      if (
+        incoming.transfer.id === transferId &&
+        incoming.transfer.status === "offered"
+      )
+        return incoming;
+    }
+    return undefined;
   }
 
   #failIncoming(peerId: string, error: string): void {

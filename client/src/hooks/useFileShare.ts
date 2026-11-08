@@ -7,6 +7,7 @@ import {
 } from "../signaling/SignalingClient";
 import { TransferService } from "../transfer/TransferService";
 import { transfersReducer } from "../transfer/transfersReducer";
+import type { Transfer } from "../transfer/types";
 import { ConnectionManager } from "../webrtc/ConnectionManager";
 import type { PeerConnectionState } from "../webrtc/PeerConnection";
 
@@ -34,7 +35,9 @@ export function useFileShare(signalingUrl: string) {
       connections.events.on("state", ({ peerId, state }) =>
         setPeerStates((previous) => ({ ...previous, [peerId]: state })),
       ),
-      transferService.events.on("update", dispatchTransfer),
+      transferService.events.on("update", (transfer) =>
+        dispatchTransfer({ type: "update", transfer }),
+      ),
     ];
 
     signaling.connect();
@@ -52,6 +55,28 @@ export function useFileShare(signalingUrl: string) {
     transferServiceRef.current?.sendFiles(peerId, files);
   }, []);
 
+  const acceptTransfer = useCallback((transfer: Transfer) => {
+    transferServiceRef.current?.accept(transfer.id);
+  }, []);
+
+  // a declined offer has nothing left to show for the receiver
+  const declineTransfer = useCallback((transfer: Transfer) => {
+    transferServiceRef.current?.decline(transfer.id);
+    dispatchTransfer({
+      type: "dismiss",
+      id: transfer.id,
+      direction: transfer.direction,
+    });
+  }, []);
+
+  const dismissTransfer = useCallback((transfer: Transfer) => {
+    dispatchTransfer({
+      type: "dismiss",
+      id: transfer.id,
+      direction: transfer.direction,
+    });
+  }, []);
+
   return {
     connection,
     self: room.self,
@@ -60,5 +85,8 @@ export function useFileShare(signalingUrl: string) {
     peerStates,
     transfers,
     sendFiles,
+    acceptTransfer,
+    declineTransfer,
+    dismissTransfer,
   };
 }
