@@ -46,10 +46,8 @@ cd server
 # frontend
 cd client
 npm install
-npm run dev -- --host
+npm run dev
 ```
-
-Open the frontend on two devices in the same network. The client connects to `ws://<host>:8080/ws` by default; override it with `VITE_SIGNALING_URL`.
 
 ## Future improvements
 
