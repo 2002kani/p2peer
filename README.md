@@ -2,9 +2,7 @@
 
 ![p2peer screenshot](.github/assets/p2peer-screenshot.png)
 
-A browser-based tool for transferring files directly between devices on the same network. When multiple devices open the application, they automatically discover each other and appear with a generated name and device type.
-
-Files are never uploaded to an external server. Instead, a lightweight Spring Boot signaling server handles the initial handshake, allowing browsers to establish a direct WebRTC connection and transfer files peer-to-peer.
+A browser-based tool for transferring files directly between devices on the same network. When multiple devices open the application, they automatically discover each other and appear with a generated name and device type. Files are never uploaded to an external server. Instead, a lightweight Spring Boot signaling server handles the initial handshake, allowing browsers to establish a direct WebRTC connection and transfer files peer-to-peer.
 
 No account or manual pairing required.
 
